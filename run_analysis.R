@@ -45,4 +45,4 @@ data.melt  = melt(data.all, id = label.id, measure.vars = label.data)
 data.tidy  = dcast(data.melt, Subject + 'Activity_Desc' ~ variable, mean)
 
 # Writing the result to tidy_data.txt file
-write.table(data.tidy, file = "./tidy_data.txt")
+write.table(data.tidy, file = "./tidy_data.txt", row.names=F)
