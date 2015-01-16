@@ -64,6 +64,7 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 2013-11-07T13:25:07Z
 2014-02-06T16:13:11Z
 2014-03-05T16:11:46Z</code></pre>
+<pre><code>Answer: 2013-11-07T13:25:07Z</code></pre>
 </div>
 <div id="question-2" class="section level3">
 <h3>Question 2</h3>
@@ -75,6 +76,7 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 sqldf(&quot;select * from acs&quot;)
 sqldf(&quot;select pwgtp1 from acs where AGEP &lt; 50&quot;)
 sqldf(&quot;select * from acs where AGEP &lt; 50 and pwgtp1&quot;)</code></pre>
+<pre><code>Answer: sqldf(&quot;select pwgtp1 from acs where AGEP &lt; 50&quot;)</code></pre>
 </div>
 <div id="question-3" class="section level3">
 <h3>Question 3</h3>
@@ -83,6 +85,7 @@ sqldf(&quot;select * from acs where AGEP &lt; 50 and pwgtp1&quot;)</code></pre>
 sqldf(&quot;select distinct AGEP from acs&quot;)
 sqldf(&quot;select distinct pwgtp1 from acs&quot;)
 sqldf(&quot;select unique AGEP from acs&quot;)</code></pre>
+<pre><code>Answer: sqldf(&quot;select distinct AGEP from acs&quot;)</code></pre>
 </div>
 <div id="question-4" class="section level3">
 <h3>Question 4</h3>
@@ -96,6 +99,19 @@ sqldf(&quot;select unique AGEP from acs&quot;)</code></pre>
 45 92 7 2
 43 99 7 25
 43 99 8 6</code></pre>
+<pre class="r"><code>hurl &lt;- &quot;http://biostat.jhsph.edu/~jleek/contact.html&quot;
+con &lt;- url(hurl)
+htmlCode &lt;- readLines(con)
+close(con)
+sapply(htmlCode[c(10, 20, 30, 100)], nchar)</code></pre>
+<pre><code>## &lt;meta name=&quot;Distribution&quot; content=&quot;Global&quot; /&gt; 
+##                                            45 
+##               &lt;script type=&quot;text/javascript&quot;&gt; 
+##                                            31 
+##                                         })(); 
+##                                             7 
+##                 \t\t\t\t&lt;ul class=&quot;sidemenu&quot;&gt; 
+##                                            25</code></pre>
 </div>
 <div id="question-5" class="section level3">
 <h3>Question 5</h3>
@@ -109,6 +125,14 @@ sqldf(&quot;select unique AGEP from acs&quot;)</code></pre>
 222243.1
 101.83
 32426.7</code></pre>
+<pre class="r"><code>if (!&quot;q2_5_data.for&quot; %in% dir(&quot;./&quot;)) {
+    fileUrl1 &lt;- &quot;https://d396qusza40orc.cloudfront.net/getdata%2Fwksst8110.for&quot;
+    download.file(url=fileUrl1, destfile=&quot;q2_5_data.for&quot;, mode=&quot;w&quot;, method=&quot;curl&quot;)
+}
+
+q2.5.data &lt;- read.fwf(&quot;q2_5_data.for&quot;,widths=c(-1,9,-5,4,4,-5,4,4,-5,4,4,-5,4,4), skip=4)
+sum(q2.5.data[, 4])</code></pre>
+<pre><code>## [1] 32426.7</code></pre>
 </div>
 
 

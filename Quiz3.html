@@ -68,6 +68,20 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 153 ,236, 388
 236, 238, 262
 125, 238,262</code></pre>
+<pre class="r"><code>if(!&quot;q3_1_data.csv&quot; %in% dir(&quot;./&quot;)) {
+    download.file(&quot;https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Fss06hid.csv&quot;, &quot;q3_1_data.csv&quot;, method=&quot;curl&quot;)   
+}
+
+q3.1.data &lt;- read.csv(&quot;q3_1_data.csv&quot;)
+q3.1.logical  &lt;- (q3.1.data$ACR==3 &amp; q3.1.data$AGS==6)
+q3.1.logical &lt;- as.logical(q3.1.logical, na.rm=T)
+which(q3.1.logical)</code></pre>
+<pre><code>##  [1]  125  238  262  470  555  568  608  643  787  808  824  849  952  955
+## [15] 1033 1265 1275 1315 1388 1607 1629 1651 1856 1919 2101 2194 2403 2443
+## [29] 2539 2580 2655 2680 2740 2838 2965 3131 3133 3163 3291 3370 3402 3585
+## [43] 3652 3852 3862 3912 4023 4045 4107 4113 4117 4185 4198 4310 4343 4354
+## [57] 4448 4453 4461 4718 4817 4835 4910 5140 5199 5236 5326 5417 5531 5574
+## [71] 5894 6033 6044 6089 6275 6376 6420</code></pre>
 </div>
 <div id="question-2" class="section level3">
 <h3>Question 2</h3>
@@ -78,6 +92,14 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 10904118 -594524
 -10904118 -10575416
 -15259150 -10575416</code></pre>
+<pre class="r"><code>if(!&quot;q3_2_data.jpg&quot; %in% dir(&quot;./&quot;)) {
+    download.file(&quot;https://d396qusza40orc.cloudfront.net/getdata%2Fjeff.jpg&quot;, &quot;q3_2_data.jpg&quot;, method=&quot;curl&quot;)
+}
+library(&quot;jpeg&quot;)
+q3.2.data &lt;- readJPEG(&quot;q3_2_data.jpg&quot;, native = T)
+quantile(q3.2.data, c(0.3, 0.8))</code></pre>
+<pre><code>##       30%       80% 
+## -15259150 -10575416</code></pre>
 </div>
 <div id="question-3" class="section level3">
 <h3>Question 3</h3>
@@ -93,6 +115,27 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 234, Spain
 189, St. Kitts and Nevis
 190, St. Kitts and Nevis</code></pre>
+<pre class="r"><code>if (!&quot;q3_3_gdp_data.csv&quot; %in% dir(&quot;./&quot;)) {
+    download.file(&quot;https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FGDP.csv&quot;,&quot;q3_3_gdp_data.csv&quot;, method=&quot;curl&quot;)    
+}
+
+if (!&quot;q3_3_edu_data.csv&quot; %in% dir(&quot;./&quot;)) {
+    download.file(&quot;https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FEDSTATS_Country.csv&quot;,&quot;q3_3_edu_data.csv&quot;, method=&quot;curl&quot;)    
+}
+
+q3.3.gdp.data &lt;- read.csv(&quot;q3_3_gdp_data.csv&quot;)
+q3.3.edu.data &lt;- read.csv(&quot;q3_3_edu_data.csv&quot;)
+
+gdpCountry &lt;- q3.3.gdp.data[with(q3.3.gdp.data, order(X) &amp; X!=&quot;&quot;),]$X
+eduCountry &lt;- q3.3.edu.data[with(q3.3.edu.data, order(CountryCode)),]$CountryCode
+
+merge.data &lt;- merge( q3.3.edu.data, q3.3.gdp.data, by.x = &quot;CountryCode&quot;, by.y = &quot;X&quot;)
+merge.data$Gross.domestic.product.2012 = as.numeric(as.character(merge.data$Gross.domestic.product.2012))
+merge.data &lt;- merge.data[!is.na(merge.data$Gross.domestic.product.2012), ]
+merge.data &lt;- merge.data[with(merge.data, order(-Gross.domestic.product.2012)),]
+merge.data[13,]$Long.Name</code></pre>
+<pre><code>## [1] St. Kitts and Nevis
+## 234 Levels: American Samoa Antigua and Barbuda ... World</code></pre>
 </div>
 <div id="question-4" class="section level3">
 <h3>Question 4</h3>
@@ -103,6 +146,10 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 133.72973, 32.96667
 23.966667, 30.91304
 23, 45</code></pre>
+<pre class="r"><code>mean(merge.data[with(merge.data, Income.Group==&quot;High income: OECD&quot;),]$Gross.domestic.product.2012)</code></pre>
+<pre><code>## [1] 32.96667</code></pre>
+<pre class="r"><code>mean(merge.data[with(merge.data, Income.Group==&quot;High income: nonOECD&quot;),]$Gross.domestic.product.2012)</code></pre>
+<pre><code>## [1] 91.91304</code></pre>
 </div>
 <div id="question-5" class="section level3">
 <h3>Question 5</h3>
@@ -111,6 +158,13 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 1
 18
 5</code></pre>
+<pre class="r"><code>merge.data  &lt;- merge.data[with(merge.data, order(Gross.domestic.product.2012)),]
+quantile(merge.data$Gross.domestic.product.2012, c(0.2, 0.4, 0.6, 0.8, 1.0))</code></pre>
+<pre><code>##   20%   40%   60%   80%  100% 
+##  38.6  76.2 113.8 152.4 190.0</code></pre>
+<pre class="r"><code>merge.data &lt;- within(merge.data, {GDP.Rank  &lt;- Gross.domestic.product.2012%/%38.6 + 1})
+nrow(merge.data[with(merge.data, GDP.Rank==1 &amp; Income.Group==&quot;Lower middle income&quot;),])</code></pre>
+<pre><code>## [1] 5</code></pre>
 </div>
 
 

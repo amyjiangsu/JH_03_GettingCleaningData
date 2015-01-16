@@ -68,6 +68,15 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 &quot;w&quot; &quot;15&quot;
 &quot;&quot; &quot;15&quot;
 &quot;wgtp&quot; &quot;15&quot;</code></pre>
+<pre class="r"><code>if (!&quot;q4_1_data.csv&quot; %in% dir(&quot;./&quot;)) {
+    fileUrl  &lt;- &quot;https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Fss06hid.csv&quot;
+    download.file(fileUrl, &quot;q4_1_data.csv&quot;, method=&quot;curl&quot;)
+}
+
+q4.1.data &lt;- read.csv(&quot;q4_1_data.csv&quot;)
+strsplit(names(q4.1.data), &quot;wgtp&quot;)[123]</code></pre>
+<pre><code>## [[1]]
+## [1] &quot;&quot;   &quot;15&quot;</code></pre>
 </div>
 <div id="question-2" class="section level3">
 <h3>Question 2</h3>
@@ -79,6 +88,15 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 381615.4
 377652.4
 387854.4</code></pre>
+<pre class="r"><code>if (!&quot;q4_2_data.csv&quot; %in% dir(&quot;./&quot;)) {
+    fileUrl  &lt;- &quot;https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FGDP.csv&quot;
+    download.file(fileUrl, &quot;q4_2_data.csv&quot;, method=&quot;curl&quot;)
+}
+
+q4.2.data &lt;- read.csv(&quot;q4_2_data.csv&quot;)
+q4.2.data.GDP &lt;- as.numeric(gsub(&quot;,&quot;, &quot;&quot;, q4.2.data[5:194, 5]))
+mean(q4.2.data.GDP)</code></pre>
+<pre><code>## [1] 377652.4</code></pre>
 </div>
 <div id="question-3" class="section level3">
 <h3>Question 3</h3>
@@ -87,6 +105,9 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 grep(&quot;*United&quot;,countryNames), 5
 grep(&quot;^United&quot;,countryNames), 3
 grep(&quot;*United&quot;,countryNames), 2</code></pre>
+<pre class="r"><code>CountryNames  &lt;- q4.2.data[5:194, 4]
+length(grep(&quot;^United&quot;,CountryNames))</code></pre>
+<pre><code>## [1] 3</code></pre>
 </div>
 <div id="question-4" class="section level3">
 <h3>Question 4</h3>
@@ -100,6 +121,20 @@ grep(&quot;*United&quot;,countryNames), 2</code></pre>
 13
 7
 31</code></pre>
+<pre class="r"><code>if (!&quot;q4_4_gdp_data.csv&quot; %in% dir(&quot;./&quot;)) {
+    download.file(&quot;https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FGDP.csv&quot;,&quot;q4_4_gdp_data.csv&quot;, method=&quot;curl&quot;)    
+}
+
+if (!&quot;q4_4_edu_data.csv&quot; %in% dir(&quot;./&quot;)) {
+    download.file(&quot;https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FEDSTATS_Country.csv&quot;,&quot;q4_4_edu_data.csv&quot;, method=&quot;curl&quot;)    
+}
+
+q4.4.gdp.data &lt;- read.csv(&quot;q4_4_gdp_data.csv&quot;)
+q4.4.edu.data &lt;- read.csv(&quot;q4_4_edu_data.csv&quot;)
+
+merge.data &lt;- merge( q4.4.edu.data, q4.4.gdp.data, by.x = &quot;CountryCode&quot;, by.y = &quot;X&quot;)
+length(grep(&quot;Fiscal year end: June&quot;,merge.data$Special.Notes))</code></pre>
+<pre><code>## [1] 13</code></pre>
 </div>
 <div id="question-5" class="section level3">
 <h3>Question 5</h3>
@@ -110,6 +145,17 @@ grep(&quot;*United&quot;,countryNames), 2</code></pre>
 250, 47
 252, 47
 252, 50</code></pre>
+<pre class="r"><code>library(quantmod)
+amzn = getSymbols(&quot;AMZN&quot;,auto.assign=FALSE)
+sampleTimes = index(amzn)
+
+library(data.table)
+Year2012  &lt;- year(sampleTimes) == 2012
+length(sampleTimes[Year2012])</code></pre>
+<pre><code>## [1] 250</code></pre>
+<pre class="r"><code>Monday2012  &lt;- weekdays(sampleTimes[Year2012]) == &quot;Monday&quot;
+length(sampleTimes[Year2012][Monday2012])</code></pre>
+<pre><code>## [1] 47</code></pre>
 </div>
 
 

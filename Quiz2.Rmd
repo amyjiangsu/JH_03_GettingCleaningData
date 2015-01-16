@@ -13,6 +13,10 @@ Register an application with the Github API here https://github.com/settings/app
     2014-02-06T16:13:11Z
     2014-03-05T16:11:46Z
 
+```
+Answer: 2013-11-07T13:25:07Z
+```
+
 ### Question 2
 
 The sqldf package allows for execution of SQL commands on R data frames. We will use the sqldf package to practice the queries we might send with the dbSendQuery command in RMySQL. Download the American Community Survey data and load it into an R object called
@@ -28,6 +32,10 @@ Which of the following commands will select only the data for the probability we
     sqldf("select pwgtp1 from acs where AGEP < 50")
     sqldf("select * from acs where AGEP < 50 and pwgtp1")
 
+```
+Answer: sqldf("select pwgtp1 from acs where AGEP < 50")
+```
+
 ### Question 3
 
 Using the same data frame you created in the previous problem, what is the equivalent function to unique(acs$AGEP)
@@ -36,6 +44,11 @@ Using the same data frame you created in the previous problem, what is the equiv
     sqldf("select distinct AGEP from acs")
     sqldf("select distinct pwgtp1 from acs")
     sqldf("select unique AGEP from acs")
+
+```
+Answer: sqldf("select distinct AGEP from acs")
+```
+
 
 ### Question 4
 
@@ -53,6 +66,14 @@ http://biostat.jhsph.edu/~jleek/contact.html
     43 99 7 25
     43 99 8 6
 
+```{r}
+hurl <- "http://biostat.jhsph.edu/~jleek/contact.html"
+con <- url(hurl)
+htmlCode <- readLines(con)
+close(con)
+sapply(htmlCode[c(10, 20, 30, 100)], nchar)
+```
+
 ### Question 5
 
 Read this data set into R and report the sum of the numbers in the fourth of the nine columns.
@@ -69,3 +90,13 @@ Original source of the data: http://www.cpc.ncep.noaa.gov/data/indices/wksst8110
     222243.1
     101.83
     32426.7
+
+```{r}
+if (!"q2_5_data.for" %in% dir("./")) {
+    fileUrl1 <- "https://d396qusza40orc.cloudfront.net/getdata%2Fwksst8110.for"
+    download.file(url=fileUrl1, destfile="q2_5_data.for", mode="w", method="curl")
+}
+
+q2.5.data <- read.fwf("q2_5_data.for",widths=c(-1,9,-5,4,4,-5,4,4,-5,4,4,-5,4,4), skip=4)
+sum(q2.5.data[, 4])
+```

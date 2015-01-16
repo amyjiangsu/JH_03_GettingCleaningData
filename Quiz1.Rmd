@@ -20,6 +20,16 @@ How many properties are worth $1,000,000 or more?
     31
     159
 
+```{r}
+if (!"q1_1_data.csv" %in% dir("./")) {
+    fileUrl1 <- "https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Fss06hid.csv"
+    download.file(url=fileUrl1, destfile="q1_1_data.csv", mode="w", method="curl")
+}
+
+q1.1.data <- read.csv("q1_1_data.csv")
+length(q1.1.data$VAL[!is.na(q1.1.data$VAL) & q1.1.data$VAL==24])
+```
+
 ### Question 2
 
 Use the data you loaded from Question 1. Consider the variable FES in the code book. Which of the "tidy data" principles does this variable violate?
@@ -27,6 +37,10 @@ Use the data you loaded from Question 1. Consider the variable FES in the code b
     Numeric values in tidy data can not represent categories.
     Each variable in a tidy data set has been transformed to be interpretable.
     Each tidy data table contains information about only one type of observation.
+
+```
+Answer:  Tidy data has one variable per column.
+```
 
 ### Question 3
 
@@ -49,6 +63,17 @@ What is the value of:
     36534720
     33544718
 
+```{r}
+if (!"q1_3_data.xlsx" %in% dir("./")) {
+    fileUrl1 <- "https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FDATA.gov_NGAP.xlsx"
+    download.file(url=fileUrl1, destfile="q1_3_data.xlsx", mode="w", method="curl")
+}
+
+library(xlsx)
+q1.3.data <- read.xlsx("q1_3_data.xlsx",rowIndex = 18:23, colIndex = 7:15, sheetIndex = 1)
+sum(q1.3.data$Zip*q1.3.data$Ext,na.rm=T) 
+```
+
 ### Question 4
 
 Read the XML data on Baltimore restaurants from here:
@@ -61,6 +86,19 @@ How many restaurants have zipcode 21231?
     100
     127
     181
+
+```{r}
+if (!"q1_4_data.xml" %in% dir("./")) {
+    fileUrl1 <- "https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Frestaurants.xml"
+    download.file(url=fileUrl1, destfile="q1_4_data.xml", mode="w", method="curl")
+}
+
+library(XML)
+q1.4.data <- xmlTreeParse("q1_4_data.xml",useInternal=TRUE)
+rootNode <- xmlRoot(q1.4.data)
+zipcode <- xpathSApply(rootNode,"//zipcode",xmlValue)
+length(zipcode[zipcode==21231])
+```
 
 ### Question 5
 
@@ -84,3 +122,21 @@ broken down by sex using the data.table package?
     mean(DT$pwgtp15,by=DT$SEX)
     DT[,mean(pwgtp15),by=SEX]
     rowMeans(DT)[DT$SEX==1]; rowMeans(DT)[DT$SEX==2]
+
+```{r}
+if (!"q1_5_data.csv" %in% dir("./")) {
+    fileUrl1 <- "https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Fss06pid.csv"
+    download.file(url=fileUrl1, destfile="q1_5_data.csv", mode="w", method="curl")
+}
+
+library(data.table)
+DT <- fread(input="q1_5_data.csv", sep=",")
+Option3  <- function() {mean(DT[DT$SEX==1,]$pwgtp15); mean(DT[DT$SEX==2,]$pwgtp15)}
+Option5 <- function () {rowMeans(DT)[DT$SEX==1]; rowMeans(DT)[DT$SEX==2]}
+
+system.time(DT[,mean(pwgtp15),by=SEX])
+system.time(tapply(DT$pwgtp15,DT$SEX,mean))
+system.time(Option3())
+system.time(DT[,mean(pwgtp15),by=SEX])
+# system.time(Option5()) # this will return error
+```
